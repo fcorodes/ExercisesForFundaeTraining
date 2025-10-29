@@ -1,0 +1,2 @@
+# ExercisesForFundaeTraining
+Mandatory exercises

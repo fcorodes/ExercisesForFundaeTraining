@@ -1,0 +1,323 @@
+---------------------------------------------
+-- DDL --------------------------------------
+---------------------------------------------
+
+CREATE TABLE `category` (
+  `CategoryID` int NOT NULL,
+  `CategoryDesc` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  PRIMARY KEY (`CategoryID`),
+  UNIQUE KEY `suplierinfo_unique` (`CategoryID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- databaselevel3firstexercise.clients definition
+
+CREATE TABLE `clients` (
+  `ClientId` int NOT NULL AUTO_INCREMENT,
+  `Surname` text NOT NULL,
+  `Name` text NOT NULL,
+  `ZipCode` int NOT NULL,
+  `Place` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `shippingAddress` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `TelephoneNumber` int NOT NULL,
+  PRIMARY KEY (`ClientId`),
+  UNIQUE KEY `clients_unique` (`TelephoneNumber`),
+  UNIQUE KEY `clients_unique_1` (`ClientId`),
+  CONSTRAINT `clients_check` CHECK ((`ZipCode` < 100000)),
+  CONSTRAINT `clients_check_1` CHECK ((`TelephoneNumber` < 1000000000))
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+-- databaselevel3firstexercise.products definition
+
+CREATE TABLE `products` (
+  `productId` int NOT NULL AUTO_INCREMENT,
+  `productName` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `productDescription` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `productStock` int unsigned NOT NULL DEFAULT '0',
+  `productPrice` float NOT NULL,
+  `CategoryId` int NOT NULL,
+  PRIMARY KEY (`productId`),
+  UNIQUE KEY `products_unique` (`productId`),
+  KEY `products_suplierinfo_FK` (`CategoryId`),
+  CONSTRAINT `products_suplierinfo_FK` FOREIGN KEY (`CategoryId`) REFERENCES `category` (`CategoryID`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Table containing all data related to products';
+
+
+
+-- databaselevel3firstexercise.orders definition
+
+CREATE TABLE `orders` (
+  `OrderId` int NOT NULL AUTO_INCREMENT,
+  `productId` int NOT NULL,
+  `ClientId` int NOT NULL,
+  `DetailID` int NOT NULL,
+  `UdsResquested` int NOT NULL,
+  PRIMARY KEY (`OrderId`),
+  UNIQUE KEY `orders_unique` (`productId`,`ClientId`,`DetailID`),
+  KEY `orders_clients_FK` (`ClientId`),
+  KEY `orders_details_FK` (`DetailID`),
+  CONSTRAINT `orders_clients_FK` FOREIGN KEY (`ClientId`) REFERENCES `clients` (`ClientId`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `orders_details_FK` FOREIGN KEY (`DetailID`) REFERENCES `details` (`DetailId`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `orders_products_FK` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;	
+-- databaselevel3firstexercise.details definition
+
+CREATE TABLE `details` (
+  `DetailId` int NOT NULL AUTO_INCREMENT,
+  `OrderDate` date NOT NULL,
+  `OrderTime` time NOT NULL,
+  `Notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`DetailId`),
+  UNIQUE KEY `details_unique` (`DetailId`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--------------------------------------------------------------
+-- data insertada---------------------------------------------
+--------------------------------------------------------------
+--------------------------------------------------------------
+
+INSERT INTO databaselevel3firstexercise.orders
+(productId, ClientId, DetailID, UdsResquested)
+VALUES(12, 1, 1, 1);
+INSERT INTO databaselevel3firstexercise.orders
+(productId, ClientId, DetailID, UdsResquested)
+VALUES(3, 2, 4, 5);
+INSERT INTO databaselevel3firstexercise.orders
+(productId, ClientId, DetailID, UdsResquested)
+VALUES(4, 2, 3, 4);
+INSERT INTO databaselevel3firstexercise.orders
+(productId, ClientId, DetailID, UdsResquested)
+VALUES(2, 2, 2, 1);
+
+INSERT INTO databaselevel3firstexercise.details
+(OrderDate, OrderTime, Notes)
+VALUES('2005-10-31', '15:15:00', 'pending');
+INSERT INTO databaselevel3firstexercise.details
+(OrderDate, OrderTime, Notes)
+VALUES('2005-10-30', '15:15:00', 'pending');
+INSERT INTO databaselevel3firstexercise.details
+(OrderDate, OrderTime, Notes)
+VALUES('2005-10-28', '15:15:00', 'pending');
+INSERT INTO databaselevel3firstexercise.details
+(OrderDate, OrderTime, Notes)
+VALUES('2005-10-14', '15:15:00', 'pending');
+
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoUno1', 'grande y azul', 0, 10.01, 1);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoSeis2', 'pequenyo y rojo', 50, 24.05, 1);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoTres3', 'agrietado', 1, 456.67, 1);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoDos4', 'grande y morado', 50, 23.0, 1);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoCuatro5', 'negro', 12, 23.05, 2);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoCinco6', 'morado y pequenyo', 12, 23.99, 2);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoTres7', 'tiene una tara', 1, 10.01, 3);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoUno8', 'tiene una rotura', 45, 5.0, 3);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoUno11', 'es transparente', 76, 9.99, 1);
+INSERT INTO databaselevel3firstexercise.products
+(productName, productDescription, productStock, productPrice, CategoryId)
+VALUES('ProductoUno9', 'no tiene una pieza', 5, 23.05, 3);
+
+
+INSERT INTO databaselevel3firstexercise.category
+(CategoryID, CategoryDesc)
+VALUES(1, 'CategoriaPremium');
+INSERT INTO databaselevel3firstexercise.category
+(CategoryID, CategoryDesc)
+VALUES(2, 'Categoria Mediana');
+INSERT INTO databaselevel3firstexercise.category
+(CategoryID, CategoryDesc)
+VALUES(3, 'Categoria Baja');
+
+
+INSERT INTO databaselevel3firstexercise.clients
+(Surname, Name, ZipCode, Place, shippingAddress, TelephoneNumber)
+VALUES('Perez', 'Jose', 56045, 'LugarUno', 'DireccioUno', 666666666);
+INSERT INTO databaselevel3firstexercise.clients
+(Surname, Name, ZipCode, Place, shippingAddress, TelephoneNumber)
+VALUES('Rodriguez', 'Marcos', 99999, 'LugarDos', 'DireccioDos', 777777777);
+
+
+--------------------------------------------------------------
+--------------------------------------------------------------
+--------------------------------------------------------------
+--------------------------------------------------------------
+
+-- Escribe una consulta SQL que calcule el total de ventas de cada categoría de producto. 
+-- Para hacerlo utiliza JOIN para combinar las tablas de productos, categorías y detalles de pedidos.
+-- Emplea también la función SUM para agregar los totales de los detalles de pedidos. Al final, agrupa los resultados por categoría de producto.
+
+select c.CategoryID, c.CategoryDesc,  sum(o.UdsResquested) 
+from category c 
+inner join products p 
+on c.CategoryID = p.CategoryId
+inner join orders o  
+on p.productId = o.productId
+inner join details d 
+on o.DetailID = d.DetailId
+group by c.CategoryID 
+
+
+CategoryID|CategoryDesc    |sum(o.UdsResquested)|
+----------+----------------+--------------------+
+         3|Categoria Baja  |                   1|
+         1|CategoriaPremium|                  10|
+
+-- Comprobación :
+
+select * 
+from category c 
+inner join products p 
+on c.CategoryID = p.CategoryId
+inner join orders o  
+on p.productId = o.productId
+inner join details d 
+on o.DetailID = d.DetailId
+
+CategoryID|CategoryDesc    |productId|productName  |productDescription|productStock|productPrice|CategoryId|OrderId|productId|ClientId|DetailID|UdsResquested|DetailId|OrderDate |OrderTime|Notes  |
+----------+----------------+---------+-------------+------------------+------------+------------+----------+-------+---------+--------+--------+-------------+--------+----------+---------+-------+
+         3|Categoria Baja  |       12|ProductoUno9 |no tiene una pieza|           5|       23.05|         3|      2|       12|       1|       1|            1|       1|2005-10-31| 15:15:00|pending|
+         1|CategoriaPremium|        3|ProductoTres3|agrietado         |           1|      456.67|         1|      4|        3|       2|       4|            5|       4|2005-10-14| 15:15:00|pending|
+         1|CategoriaPremium|        4|ProductoDos4 |grande y morado   |          50|        23.0|         1|      5|        4|       2|       3|            4|       3|2005-10-28| 15:15:00|pending|
+         1|CategoriaPremium|        2|ProductoSeis2|pequenyo y rojo   |          50|       24.05|         1|      6|        2|       2|       2|            1|       2|2005-10-30| 15:15:00|pending|
+
+
+-- Tu segunda tarea es crear una consulta SQL para determinar el gasto promedio de cada cliente. 
+-- Usa JOINs para conectar las tablas de clientes y pedidos. Aplica también las funciones SUM para sumar los pedidos y AVG para calcular el promedio. 
+
+
+select c.ClientId, sum(o.UdsResquested) as 'total de unidades por cliente'
+from clients c
+inner join orders o
+on c.ClientId = o.ClientId 
+group by o.ClientId 
+
+ClientId|total de unidades por cliente|
+--------+-----------------------------+
+       1|                            1|
+       2|                           10|
+
+
+select c.ClientId , count(o.OrderId)  as 'numero de pedidos por cada cliente'
+from clients c
+inner join orders o
+on c.ClientId = o.ClientId
+group by o.ClientId 
+
+ClientId|numero de pedidos por cada cliente|
+--------+----------------------------------+
+       1|                                 1|
+       2|                                 3|
+
+
+
+
+select c.ClientId ,o.UdsResquested, p.productPrice , o.UdsResquested * p.productPrice as 'dinero gastado'  
+from clients c
+inner join orders o
+on c.ClientId = o.ClientId
+inner join products p
+on o.productId = p.productId
+
+ClientId|UdsResquested|productPrice|dinero gastado    |
+--------+-------------+------------+------------------+
+       1|            1|       23.05|23.049999237060547|
+       2|            5|      456.67| 2283.350067138672|
+       2|            4|        23.0|              92.0|
+       2|            1|       24.05|24.049999237060547|
+
+
+
+select c.ClientId , avg(o.UdsResquested * p.productPrice)
+from clients c
+inner join orders o
+on c.ClientId = o.ClientId
+inner join products p
+on o.productId = p.productId
+group by c.ClientId 
+
+
+ClientId|avg(o.UdsResquested * p.productPrice)|
+--------+-------------------------------------+
+       1|                   23.049999237060547|
+       2|                    799.8000221252441|
+
+
+
+
+[RÓTULO: Consulta 3: Productos más vendidos]  ORDER BY A continuación, desarrolla una consulta SQL para listar los productos más vendidos en orden descendente. Combina la tabla de productos con los detalles de pedidos para contar las veces que cada producto ha sido pedido. Luego, ordena los resultados de mayor a menor usando ORDER BY. 
+
+
+select o.productId , o.UdsResquested 
+from orders o  
+order by o.UdsResquested desc
+
+productId|UdsResquested|
+---------+-------------+
+        3|            5|
+        4|            4|
+       12|            1|
+        2|            1|
+
+[RÓTULO: Consulta 4: Clientes sin pedidos]  LEFT JOIN  WHERE Al final, formula una consulta SQL para identificar a los clientes que no han hecho ningún pedido. Considera usar una subconsulta o un LEFT JOIN con la tabla de pedidos. Para acabar, filtra los resultados con una cláusula WHERE para buscar clientes con valores nulos en la columna de pedidos. 
+
+select distinct(c.Name ), sum(o.UdsResquested ) as 'unidades pedidas'  from clients c 
+left join orders o  
+on c.ClientId = o.ClientId
+where o.UdsResquested > 0
+group by c.Name 
+
+
+Name  |unidades pedidas|
+------+----------------+
+Jose  |               1|
+Marcos|              10|
+
+
+añadiendo 
+INSERT INTO databaselevel3firstexercise.clients
+(Surname, Name, ZipCode, Place, shippingAddress, TelephoneNumber)
+VALUES('SinDinero', 'Javier', 44444, 'SinLugar', 'SinDireccion', 000777777);
+
+
+select distinct(c.Name ), sum(o.UdsResquested ) as 'unidades pedidas'  from clients c 
+left join orders o  
+on c.ClientId = o.ClientId
+-- where o.UdsResquested > 0
+group by c.Name 
+
+Name  |unidades pedidas|
+------+----------------+
+Jose  |               1|
+Marcos|              10|
+Javier|                |
+
+
+
+select distinct(c.Name ), sum(o.UdsResquested ) as 'unidades pedidas'  from clients c 
+left join orders o  
+on c.ClientId = o.ClientId
+where o.UdsResquested is null
+group by c.Name 
+
+
+Name  |unidades pedidas|
+------+----------------+
+Javier|                |
+
